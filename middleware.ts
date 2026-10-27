@@ -11,6 +11,7 @@ const PUBLIC_PATHS = [
   '/api/auth/register',
   '/api/incidents',
   '/api/weather',
+  '/api/safety-guidance',
 ];
 
 function isPublic(pathname: string): boolean {

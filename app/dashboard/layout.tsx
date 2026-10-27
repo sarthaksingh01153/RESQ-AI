@@ -13,6 +13,7 @@ import {
   LogOut,
   Menu,
   X,
+  Zap,
   Shield,
   ChevronRight,
   User,
@@ -37,6 +38,12 @@ const NAV_ITEMS: NavItem[] = [
     roles: ['OFFICER', 'INVENTORY_MANAGER', 'ADMIN'],
   },
   { href: '/dashboard/analytics', label: 'Analytics', icon: <BarChart3 className="h-4 w-4" /> },
+  {
+    href: '/dashboard/demo',
+    label: 'Flood Demo',
+    icon: <Zap className="h-4 w-4" />,
+    roles: ['OFFICER', 'ADMIN'],
+  },
   { href: '/dashboard/settings', label: 'Settings', icon: <Settings className="h-4 w-4" /> },
 ]
 

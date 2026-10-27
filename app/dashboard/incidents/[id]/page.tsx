@@ -180,7 +180,7 @@ export default function IncidentDetailPage() {
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <h1 className="text-xl font-bold text-slate-900">{incident.title}</h1>
               <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${SEVERITY_COLORS[incident.severity]}`}>{incident.severity}</span>
-              <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STATUS_COLORS[incident.status]}`}>{(incident.status || '').replace(/_/g,' ')}</span>
+              <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STATUS_COLORS[incident.status]}`}>{(incident.status || '').replace(/_/g, ' ')}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
               <code className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg font-mono">{incident.trackingId}</code>
@@ -216,7 +216,7 @@ export default function IncidentDetailPage() {
                 <h3 className="text-sm font-semibold text-slate-700">Incident Details</h3>
                 <p className="text-sm text-slate-600">{incident.description || 'No description.'}</p>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div><p className="text-xs text-slate-400 mb-0.5">Type</p><p className="text-slate-800 font-medium">{(incident.type || '').replace(/_/g,' ')}</p></div>
+                  <div><p className="text-xs text-slate-400 mb-0.5">Type</p><p className="text-slate-800 font-medium">{(incident.type || '').replace(/_/g, ' ')}</p></div>
                   <div><p className="text-xs text-slate-400 mb-0.5">Reporter</p><p className="text-slate-800 font-medium flex items-center gap-1"><User className="h-3.5 w-3.5 text-slate-400" />{incident.reportedBy?.name || incident.reporterName || 'Anonymous'}</p></div>
                   <div><p className="text-xs text-slate-400 mb-0.5">Contact</p><p className="text-slate-800 font-medium flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-slate-400" />{incident.reporterPhone || '—'}</p></div>
                   <div><p className="text-xs text-slate-400 mb-0.5">Assigned To</p><p className="text-slate-800 font-medium">{incident.assignedTo?.name || 'Unassigned'}</p></div>
@@ -253,7 +253,7 @@ export default function IncidentDetailPage() {
                           {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-200 mt-1" />}
                         </div>
                         <div className="pb-3">
-                          <p className="text-sm font-medium text-slate-800">{entry.status.replace(/_/g,' ')}</p>
+                          <p className="text-sm font-medium text-slate-800">{entry.status.replace(/_/g, ' ')}</p>
                           {entry.note && <p className="text-xs text-slate-500 mt-0.5">{entry.note}</p>}
                           <p className="text-xs text-slate-400 mt-1">{fdt(entry.createdAt)}</p>
                         </div>
@@ -446,8 +446,8 @@ export default function IncidentDetailPage() {
             <Select value={newStatus} onValueChange={setNewStatus}>
               <SelectTrigger><SelectValue placeholder="Select new status…" /></SelectTrigger>
               <SelectContent>
-                {['REPORTED','ANALYZING','VERIFIED','DISPATCHED','IN_PROGRESS','RESOLVED','CLOSED'].map((s) => (
-                  <SelectItem key={s} value={s}>{s.replace(/_/g,' ')}</SelectItem>
+                {['REPORTED', 'ANALYZING', 'VERIFIED', 'DISPATCHED', 'IN_PROGRESS', 'RESOLVED', 'CLOSED'].map((s) => (
+                  <SelectItem key={s} value={s}>{s.replace(/_/g, ' ')}</SelectItem>
                 ))}
               </SelectContent>
             </Select>

@@ -22,3 +22,12 @@ export async function markAllRead(userId: string) {
   return prisma.notification.updateMany({ where:{userId, isRead:false}, data:{isRead:true} });
 }
 
+// Alias for single-user notification (used by demo and officer updates)
+export const notifyUser = createNotification;
+
+export async function notifyRoleGroup(role: string, d: { title:string; message:string; type?:string; incidentId?:string; link?:string }) {
+  const users = await prisma.user.findMany({ where:{ role, isActive:true }, select:{id:true} });
+  if (!users.length) return;
+  await prisma.notification.createMany({ data: users.map(u=>({ userId:u.id, title:d.title, message:d.message, type:d.type??"SYSTEM", incidentId:d.incidentId, link:d.link })) });
+}
+
