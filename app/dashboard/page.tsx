@@ -14,7 +14,7 @@ import {
 
 const IncidentMap = dynamic(
   () => import('@/components/dashboard/IncidentMap').then((m) => m.IncidentMap),
-  { ssr: false, loading: () => <div className="h-64 bg-slate-800 rounded-lg animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-64 bg-slate-100 rounded-xl animate-pulse" /> }
 )
 
 const SEVERITY_PIE_COLORS: Record<string, string> = {
@@ -64,7 +64,7 @@ export default function DashboardPage() {
       <div className="space-y-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-28 bg-slate-800 rounded-lg animate-pulse" />
+            <div key={i} className="h-28 bg-white border border-black/[0.06] rounded-2xl animate-pulse" />
           ))}
         </div>
       </div>
@@ -81,7 +81,6 @@ export default function DashboardPage() {
     color: SEVERITY_PIE_COLORS[d.severity] || '#94a3b8',
   }))
 
-  // Map incidents to expected format
   const mapIncidents = incidents.map((inc: any) => ({
     ...inc,
     incidentType: inc.type,
@@ -94,13 +93,13 @@ export default function DashboardPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Command Overview</h1>
-          <p className="text-slate-500 text-sm mt-0.5">Real-time emergency response dashboard</p>
+          <h1 className="text-2xl font-bold text-slate-900">Command Overview</h1>
+          <p className="text-slate-400 text-sm mt-0.5">Real-time emergency response dashboard</p>
         </div>
         <button
           onClick={fetchData}
           disabled={refreshing}
-          className="flex items-center gap-2 px-3 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-lg text-sm text-slate-300 transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-white hover:bg-slate-50 border border-black/[0.06] rounded-xl text-sm text-slate-600 shadow-sm transition-colors"
         >
           <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
           Refresh
@@ -109,34 +108,34 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <StatCard title="Active Incidents" value={data?.activeIncidents ?? 0} icon={<Activity className="h-5 w-5" />} valueClassName={data?.activeIncidents ? 'text-blue-400' : undefined} />
-        <StatCard title="Critical" value={data?.criticalIncidents ?? 0} icon={<AlertTriangle className="h-5 w-5" />} valueClassName={data?.criticalIncidents ? 'text-red-400' : undefined} />
-        <StatCard title="Pending Review" value={data?.pendingReview ?? 0} icon={<Clock className="h-5 w-5" />} valueClassName={data?.pendingReview ? 'text-orange-400' : undefined} />
-        <StatCard title="Teams Available" value={data?.teamsAvailable ?? 0} icon={<Users className="h-5 w-5" />} valueClassName="text-green-400" />
-        <StatCard title="Resources Available" value={data?.resourcesAvailable ?? 0} icon={<Package className="h-5 w-5" />} valueClassName="text-green-400" />
-        <StatCard title="Low Stock Items" value={data?.lowStockItems ?? 0} icon={<TrendingUp className="h-5 w-5" />} valueClassName={data?.lowStockItems ? 'text-amber-400' : undefined} />
+        <StatCard title="Active Incidents" value={data?.activeIncidents ?? 0} icon={<Activity className="h-5 w-5" />} valueClassName={data?.activeIncidents ? 'text-blue-600' : undefined} />
+        <StatCard title="Critical" value={data?.criticalIncidents ?? 0} icon={<AlertTriangle className="h-5 w-5" />} valueClassName={data?.criticalIncidents ? 'text-red-600' : undefined} />
+        <StatCard title="Pending Review" value={data?.pendingReview ?? 0} icon={<Clock className="h-5 w-5" />} valueClassName={data?.pendingReview ? 'text-orange-600' : undefined} />
+        <StatCard title="Teams Available" value={data?.teamsAvailable ?? 0} icon={<Users className="h-5 w-5" />} valueClassName="text-green-600" />
+        <StatCard title="Resources Available" value={data?.resourcesAvailable ?? 0} icon={<Package className="h-5 w-5" />} valueClassName="text-green-600" />
+        <StatCard title="Low Stock Items" value={data?.lowStockItems ?? 0} icon={<TrendingUp className="h-5 w-5" />} valueClassName={data?.lowStockItems ? 'text-amber-600' : undefined} />
       </div>
 
       {/* Map + Weather */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-lg border border-slate-700 bg-slate-800 p-4">
-          <h2 className="text-sm font-semibold text-slate-300 mb-3">Live Incident Map</h2>
+        <div className="lg:col-span-2 rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+          <h2 className="text-sm font-semibold text-slate-700 mb-3">Live Incident Map</h2>
           <IncidentMap incidents={mapIncidents} height="300px" center={[20.5937, 78.9629]} zoom={5} />
         </div>
         <div className="space-y-4">
           <WeatherWidget lat={28.6139} lon={77.209} />
-          <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-            <h2 className="text-sm font-semibold text-slate-300 mb-3">By Severity</h2>
+          <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+            <h2 className="text-sm font-semibold text-slate-700 mb-3">By Severity</h2>
             {bySeverityData.length === 0 ? (
-              <p className="text-slate-500 text-xs text-center py-4">No data yet</p>
+              <p className="text-slate-400 text-xs text-center py-4">No data yet</p>
             ) : (
               <ResponsiveContainer width="100%" height={150}>
                 <PieChart>
                   <Pie data={bySeverityData} cx="50%" cy="50%" innerRadius={35} outerRadius={60} dataKey="value" nameKey="name">
                     {bySeverityData.map((entry: any, i: number) => <Cell key={i} fill={entry.color} />)}
                   </Pie>
-                  <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, color: '#f1f5f9' }} />
-                  <Legend iconType="circle" iconSize={8} formatter={(val) => <span style={{ color: '#94a3b8', fontSize: 11 }}>{val}</span>} />
+                  <Tooltip contentStyle={{ background: '#fff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 10, color: '#0f172a' }} />
+                  <Legend iconType="circle" iconSize={8} formatter={(val) => <span style={{ color: '#64748b', fontSize: 11 }}>{val}</span>} />
                 </PieChart>
               </ResponsiveContainer>
             )}
@@ -146,13 +145,13 @@ export default function DashboardPage() {
 
       {/* Type chart */}
       {byTypeData.length > 0 && (
-        <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-          <h2 className="text-sm font-semibold text-slate-300 mb-3">Incidents by Type</h2>
+        <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+          <h2 className="text-sm font-semibold text-slate-700 mb-3">Incidents by Type</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={byTypeData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
               <XAxis dataKey="name" tick={{ fill: '#94a3b8', fontSize: 11 }} />
               <YAxis tick={{ fill: '#94a3b8', fontSize: 11 }} />
-              <Tooltip contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, color: '#f1f5f9' }} />
+              <Tooltip contentStyle={{ background: '#fff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: 10, color: '#0f172a' }} />
               <Bar dataKey="count" fill="#3b82f6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -160,24 +159,24 @@ export default function DashboardPage() {
       )}
 
       {/* Recent activity */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800">
-        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700">
-          <h2 className="text-sm font-semibold text-slate-300">Recent Activity</h2>
-          <Link href="/dashboard/incidents" className="text-xs text-blue-400 hover:underline">View all →</Link>
+      <div className="rounded-2xl border border-black/[0.06] bg-white shadow-sm overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100">
+          <h2 className="text-sm font-semibold text-slate-700">Recent Activity</h2>
+          <Link href="/dashboard/incidents" className="text-xs text-blue-600 hover:underline">View all →</Link>
         </div>
         {(!data?.recentActivity || data.recentActivity.length === 0) ? (
-          <div className="p-6 text-center text-slate-500 text-sm">No incidents recorded yet.</div>
+          <div className="p-6 text-center text-slate-400 text-sm">No incidents recorded yet.</div>
         ) : (
-          <div className="divide-y divide-slate-700/60">
+          <div className="divide-y divide-slate-100">
             {data.recentActivity.map((inc: any) => (
-              <Link key={inc.id} href={`/dashboard/incidents/${inc.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-slate-750 transition-colors">
-                <div className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${SEVERITY_DOT[inc.severity] || 'bg-slate-500'}`} />
+              <Link key={inc.id} href={`/dashboard/incidents/${inc.id}`} className="flex items-center gap-3 px-4 py-3 hover:bg-blue-50/40 transition-colors">
+                <div className={`h-2.5 w-2.5 rounded-full flex-shrink-0 ${SEVERITY_DOT[inc.severity] || 'bg-slate-400'}`} />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-slate-200 truncate">{inc.title}</p>
-                  <p className="text-xs text-slate-500">{(inc.type || '').replace(/_/g,' ')}</p>
+                  <p className="text-sm font-medium text-slate-800 truncate">{inc.title}</p>
+                  <p className="text-xs text-slate-400">{(inc.type || '').replace(/_/g,' ')}</p>
                 </div>
                 <div className="flex items-center gap-2 flex-shrink-0">
-                  <span className="text-xs text-slate-600 hidden sm:block">{formatDateTime(inc.createdAt)}</span>
+                  <span className="text-xs text-slate-400 hidden sm:block">{formatDateTime(inc.createdAt)}</span>
                 </div>
               </Link>
             ))}
@@ -187,4 +186,3 @@ export default function DashboardPage() {
     </div>
   )
 }
-

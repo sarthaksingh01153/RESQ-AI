@@ -1,0 +1,307 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("CITIZEN")
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  incidents         Incident[]         @relation("ReporterIncidents")
+  assignedIncidents Incident[]         @relation("OfficerIncidents")
+  timelineEntries   IncidentTimeline[]
+  notifications     Notification[]
+  auditLogs         AuditLog[]
+  approvedReservations ResourceReservation[] @relation("ApprovedReservations")
+  inventoryMovements   InventoryMovement[]
+}
+
+model Incident {
+  id            String   @id @default(cuid())
+  trackingId    String   @unique
+  type          String
+  severity      String   @default("MEDIUM")
+  status        String   @default("REPORTED")
+  title         String
+  description   String
+  latitude      Float
+  longitude     Float
+  address       String?
+  reporterName  String
+  reporterPhone String?
+  reporterEmail String?
+  reportedById  String?
+  assignedToId  String?
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  reportedBy      User?              @relation("ReporterIncidents", fields: [reportedById], references: [id])
+  assignedTo      User?              @relation("OfficerIncidents", fields: [assignedToId], references: [id])
+  attachments     IncidentAttachment[]
+  timeline        IncidentTimeline[]
+  aiAnalyses      AIAnalysis[]
+  rescuePlans     RescuePlan[]
+  reservations    ResourceReservation[]
+  dispatches      Dispatch[]
+  agentActivities AgentActivity[]
+  weatherObs      WeatherObservation[]
+}
+
+model IncidentAttachment {
+  id         String   @id @default(cuid())
+  incidentId String
+  filename   String
+  url        String
+  mimeType   String
+  size       Int
+  createdAt  DateTime @default(now())
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+}
+
+model IncidentTimeline {
+  id          String   @id @default(cuid())
+  incidentId  String
+  status      String
+  note        String?
+  isPublic    Boolean  @default(true)
+  createdById String?
+  createdAt   DateTime @default(now())
+
+  incident  Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+  createdBy User?    @relation(fields: [createdById], references: [id])
+}
+
+model AIAnalysis {
+  id             String   @id @default(cuid())
+  incidentId     String
+  agentName      String
+  classification String?
+  severity       String?
+  summary        String?
+  keyFacts       String?
+  missingInfo    String?
+  duplicateFlag  Boolean  @default(false)
+  priorityReason String?
+  rawOutput      String?
+  modelUsed      String?
+  isMock         Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+}
+
+model RescuePlan {
+  id                String    @id @default(cuid())
+  incidentId        String
+  status            String    @default("DRAFT")
+  summary           String?
+  resourcesRequired String?
+  estimatedTime     Int?
+  routeInfo         String?
+  weatherInfo       String?
+  notes             String?
+  approvedById      String?
+  approvedAt        DateTime?
+  isMock            Boolean   @default(false)
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  incident Incident @relation(fields: [incidentId], references: [id], onDelete: Cascade)
+}
+
+model InventoryLocation {
+  id        String   @id @default(cuid())
+  name      String
+  address   String?
+  latitude  Float?
+  longitude Float?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  items InventoryItem[]
+}
+
+model InventoryItem {
+  id                 String    @id @default(cuid())
+  name               String
+  category           String
+  unit               String    @default("units")
+  locationId         String?
+  condition          String    @default("GOOD")
+  status             String    @default("AVAILABLE")
+  availableQty       Int       @default(0)
+  reservedQty        Int       @default(0)
+  dispatchedQty      Int       @default(0)
+  minThreshold       Int       @default(5)
+  expiryDate         DateTime?
+  lastInspectionDate DateTime?
+  capacity           Int?
+  operationalStatus  String?
+  notes              String?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+
+  location         InventoryLocation?  @relation(fields: [locationId], references: [id])
+  movements        InventoryMovement[]
+  reservationItems ReservationItem[]
+  dispatchItems    DispatchItem[]
+}
+
+model InventoryMovement {
+  id            String   @id @default(cuid())
+  itemId        String
+  type          String
+  quantity      Int
+  reason        String?
+  incidentId    String?
+  performedById String?
+  createdAt     DateTime @default(now())
+
+  item        InventoryItem @relation(fields: [itemId], references: [id])
+  performedBy User?         @relation(fields: [performedById], references: [id])
+}
+
+model ResourceReservation {
+  id           String    @id @default(cuid())
+  incidentId   String
+  status       String    @default("PENDING")
+  notes        String?
+  approvedById String?
+  approvedAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  incident   Incident        @relation(fields: [incidentId], references: [id])
+  approvedBy User?           @relation("ApprovedReservations", fields: [approvedById], references: [id])
+  items      ReservationItem[]
+  dispatches Dispatch[]
+}
+
+model ReservationItem {
+  id            String @id @default(cuid())
+  reservationId String
+  itemId        String
+  quantity      Int
+  reason        String?
+
+  reservation ResourceReservation @relation(fields: [reservationId], references: [id], onDelete: Cascade)
+  item        InventoryItem       @relation(fields: [itemId], references: [id])
+}
+
+model Dispatch {
+  id            String    @id @default(cuid())
+  reservationId String?
+  incidentId    String
+  status        String    @default("PENDING")
+  notes         String?
+  dispatchedAt  DateTime?
+  returnedAt    DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  reservation ResourceReservation? @relation(fields: [reservationId], references: [id])
+  incident    Incident             @relation(fields: [incidentId], references: [id])
+  items       DispatchItem[]
+}
+
+model DispatchItem {
+  id          String @id @default(cuid())
+  dispatchId  String
+  itemId      String
+  quantity    Int
+  returnedQty Int    @default(0)
+  notes       String?
+
+  dispatch Dispatch      @relation(fields: [dispatchId], references: [id], onDelete: Cascade)
+  item     InventoryItem @relation(fields: [itemId], references: [id])
+}
+
+model RescueTeam {
+  id             String   @id @default(cuid())
+  name           String
+  specialization String?
+  status         String   @default("AVAILABLE")
+  locationId     String?
+  capacity       Int      @default(5)
+  contact        String?
+  notes          String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model WeatherObservation {
+  id            String   @id @default(cuid())
+  incidentId    String?
+  latitude      Float
+  longitude     Float
+  temperature   Float?
+  humidity      Float?
+  windSpeed     Float?
+  windDir       String?
+  conditions    String?
+  precipitation Float?
+  visibility    Float?
+  alerts        String?
+  source        String   @default("open-meteo")
+  observedAt    DateTime
+  createdAt     DateTime @default(now())
+
+  incident Incident? @relation(fields: [incidentId], references: [id])
+}
+
+model Notification {
+  id         String   @id @default(cuid())
+  userId     String
+  title      String
+  message    String
+  type       String   @default("SYSTEM")
+  isRead     Boolean  @default(false)
+  incidentId String?
+  link       String?
+  createdAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  userId     String?
+  action     String
+  resource   String
+  resourceId String?
+  details    String?
+  ipAddress  String?
+  userAgent  String?
+  createdAt  DateTime @default(now())
+
+  user User? @relation(fields: [userId], references: [id])
+}
+
+model AgentActivity {
+  id         String   @id @default(cuid())
+  incidentId String?
+  agentName  String
+  action     String
+  status     String   @default("RUNNING")
+  toolsUsed  String?
+  result     String?
+  errorMsg   String?
+  duration   Int?
+  createdAt  DateTime @default(now())
+
+  incident Incident? @relation(fields: [incidentId], references: [id])
+}
+

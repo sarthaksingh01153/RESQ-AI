@@ -100,7 +100,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="min-h-screen bg-[#f6f7f9] flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="h-10 w-10 rounded-full border-4 border-blue-500 border-t-transparent animate-spin" />
           <span className="text-slate-400 text-sm">Loading dashboard…</span>
@@ -122,20 +122,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   }
 
   const Sidebar = (
-    <aside className="flex flex-col h-full bg-slate-900 border-r border-slate-800 w-60">
+    <aside className="flex flex-col h-full bg-white border-r border-black/[0.06] w-60 shadow-sm">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-slate-800">
+      <div className="flex items-center gap-2.5 px-5 py-4 border-b border-black/[0.06]">
         <div className="h-8 w-8 bg-red-600 rounded-lg flex items-center justify-center">
-          <Shield className="h-4.5 w-4.5 text-white" />
+          <Shield className="h-4 w-4 text-white" />
         </div>
         <div>
-          <span className="text-lg font-bold text-slate-100">RESQ</span>
-          <span className="text-lg font-bold text-red-500"> AI</span>
+          <span className="text-lg font-bold text-slate-900">RESQ</span>
+          <span className="text-lg font-bold text-red-600"> AI</span>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 py-4 px-3 space-y-0.5 overflow-y-auto">
         {allowedNav.map((item) => {
           const active = pathname === item.href || (item.href !== '/dashboard' && pathname.startsWith(item.href))
           return (
@@ -144,34 +144,34 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               href={item.href}
               onClick={() => setSidebarOpen(false)}
               className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors',
+                'flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
                 active
-                  ? 'bg-blue-600 text-white'
-                  : 'text-slate-400 hover:text-slate-100 hover:bg-slate-800'
+                  ? 'bg-blue-50 text-blue-700'
+                  : 'text-slate-500 hover:text-slate-900 hover:bg-slate-100'
               )}
             >
               {item.icon}
               {item.label}
-              {active && <ChevronRight className="h-3.5 w-3.5 ml-auto" />}
+              {active && <ChevronRight className="h-3.5 w-3.5 ml-auto text-blue-500" />}
             </Link>
           )
         })}
       </nav>
 
       {/* User */}
-      <div className="border-t border-slate-800 p-4">
+      <div className="border-t border-black/[0.06] p-4">
         <div className="flex items-center gap-3 mb-3">
-          <div className="h-9 w-9 rounded-full bg-blue-700 flex items-center justify-center text-white font-semibold text-sm">
+          <div className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">
             {user.name.charAt(0).toUpperCase()}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-slate-200 truncate">{user.name}</p>
-            <p className="text-xs text-slate-500 truncate">{ROLE_LABELS[user.role] || user.role}</p>
+            <p className="text-sm font-medium text-slate-900 truncate">{user.name}</p>
+            <p className="text-xs text-slate-400 truncate">{ROLE_LABELS[user.role] || user.role}</p>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-900/20 transition-colors"
+          className="w-full flex items-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Sign Out
@@ -181,14 +181,14 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   )
 
   return (
-    <div className="min-h-screen bg-slate-950 flex">
+    <div className="min-h-screen bg-[#f6f7f9] flex">
       {/* Desktop sidebar */}
       <div className="hidden md:flex flex-col w-60 flex-shrink-0">{Sidebar}</div>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-50 md:hidden">
-          <div className="absolute inset-0 bg-black/60" onClick={() => setSidebarOpen(false)} />
+          <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" onClick={() => setSidebarOpen(false)} />
           <div className="absolute left-0 top-0 h-full w-60 z-10 flex flex-col">{Sidebar}</div>
         </div>
       )}
@@ -196,9 +196,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
         {/* Top bar */}
-        <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-6 h-14 bg-slate-900 border-b border-slate-800">
+        <header className="sticky top-0 z-40 flex items-center justify-between px-4 md:px-6 h-14 bg-white/80 backdrop-blur-md border-b border-black/[0.06]">
           <button
-            className="md:hidden text-slate-400 hover:text-slate-100"
+            className="md:hidden text-slate-400 hover:text-slate-900"
             onClick={() => setSidebarOpen(true)}
           >
             <Menu className="h-5 w-5" />
@@ -207,15 +207,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
           <div className="flex items-center gap-3">
             <Link href="/dashboard/notifications" className="relative">
-              <Bell className="h-5 w-5 text-slate-400 hover:text-slate-100" />
+              <Bell className="h-5 w-5 text-slate-400 hover:text-slate-700 transition-colors" />
               {notifCount > 0 && (
                 <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 rounded-full text-white text-xs flex items-center justify-center">
                   {notifCount > 9 ? '9+' : notifCount}
                 </span>
               )}
             </Link>
-            <div className="flex items-center gap-2 text-sm text-slate-300">
-              <User className="h-4 w-4 text-slate-500" />
+            <div className="flex items-center gap-2 text-sm text-slate-600">
+              <User className="h-4 w-4 text-slate-400" />
               <span className="hidden sm:block">{user.name}</span>
             </div>
           </div>
@@ -229,4 +229,3 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     </div>
   )
 }
-

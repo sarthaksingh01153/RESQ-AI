@@ -38,7 +38,7 @@ export function AgentActivityLog({ incidentId, className }: AgentActivityLogProp
           const data = await res.json()
           setActivities(data.activities || [])
         }
-      } catch {}
+      } catch { }
       setLoading(false)
     }
     fetchActivities()
@@ -48,7 +48,7 @@ export function AgentActivityLog({ incidentId, className }: AgentActivityLogProp
     return (
       <div className={cn('space-y-2', className)}>
         {[1, 2, 3].map((i) => (
-          <div key={i} className="animate-pulse h-16 bg-slate-800 rounded-lg border border-slate-700" />
+          <div key={i} className="animate-pulse h-16 bg-slate-100 rounded-xl border border-black/[0.06]" />
         ))}
       </div>
     )
@@ -56,10 +56,10 @@ export function AgentActivityLog({ incidentId, className }: AgentActivityLogProp
 
   if (activities.length === 0) {
     return (
-      <div className={cn('rounded-lg border border-slate-700 bg-slate-800 p-6 text-center', className)}>
-        <Bot className="h-8 w-8 text-slate-600 mx-auto mb-2" />
+      <div className={cn('rounded-2xl border border-black/[0.06] bg-white p-6 text-center shadow-sm', className)}>
+        <Bot className="h-8 w-8 text-slate-300 mx-auto mb-2" />
         <p className="text-sm text-slate-500">No AI agent activity recorded yet.</p>
-        <p className="text-xs text-slate-600 mt-1">Run AI analysis to see activity here.</p>
+        <p className="text-xs text-slate-400 mt-1">Run AI analysis to see activity here.</p>
       </div>
     )
   }
@@ -73,42 +73,42 @@ export function AgentActivityLog({ incidentId, className }: AgentActivityLogProp
           : []
 
         return (
-          <div key={activity.id} className="rounded-lg border border-slate-700 bg-slate-800 overflow-hidden">
+          <div key={activity.id} className="rounded-xl border border-black/[0.06] bg-white overflow-hidden shadow-sm">
             <button
-              className="w-full flex items-center gap-3 p-3 text-left hover:bg-slate-750 transition-colors"
+              className="w-full flex items-center gap-3 p-3 text-left hover:bg-slate-50 transition-colors"
               onClick={() => setExpanded(isExpanded ? null : activity.id)}
             >
               <div className="flex-shrink-0">
-                {activity.status === 'COMPLETED' ? <CheckCircle2 className="h-5 w-5 text-green-400" />
-                : activity.status === 'FAILED' ? <XCircle className="h-5 w-5 text-red-400" />
-                : activity.status === 'RUNNING' ? <Loader2 className="h-5 w-5 text-blue-400 animate-spin" />
-                : <Clock className="h-5 w-5 text-slate-500" />}
+                {activity.status === 'COMPLETED' ? <CheckCircle2 className="h-5 w-5 text-green-500" />
+                  : activity.status === 'FAILED' ? <XCircle className="h-5 w-5 text-red-500" />
+                    : activity.status === 'RUNNING' ? <Loader2 className="h-5 w-5 text-blue-500 animate-spin" />
+                      : <Clock className="h-5 w-5 text-slate-400" />}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 flex-wrap">
-                  <span className="text-sm font-medium text-slate-200">{activity.agentName}</span>
-                  <span className="text-xs text-slate-500">→</span>
-                  <span className="text-sm text-slate-400 truncate">{activity.action}</span>
+                  <span className="text-sm font-medium text-slate-800">{activity.agentName}</span>
+                  <span className="text-xs text-slate-400">→</span>
+                  <span className="text-sm text-slate-500 truncate">{activity.action}</span>
                 </div>
                 <div className="flex items-center gap-3 mt-0.5">
-                  <span className="text-xs text-slate-600">{fmt(activity.createdAt)}</span>
-                  {activity.duration && <span className="text-xs text-slate-600">{(activity.duration / 1000).toFixed(1)}s</span>}
-                  {tools.length > 0 && <span className="text-xs text-blue-500">{tools.length} tool{tools.length > 1 ? 's' : ''}</span>}
+                  <span className="text-xs text-slate-400">{fmt(activity.createdAt)}</span>
+                  {activity.duration && <span className="text-xs text-slate-400">{(activity.duration / 1000).toFixed(1)}s</span>}
+                  {tools.length > 0 && <span className="text-xs text-blue-600 font-medium">{tools.length} tool{tools.length > 1 ? 's' : ''}</span>}
                 </div>
               </div>
-              <div className="flex-shrink-0 text-slate-600">
+              <div className="flex-shrink-0 text-slate-400">
                 {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
               </div>
             </button>
 
             {isExpanded && (
-              <div className="border-t border-slate-700 p-3 space-y-2 bg-slate-900">
+              <div className="border-t border-slate-100 p-3 space-y-2 bg-slate-50">
                 {tools.length > 0 && (
                   <div>
                     <p className="text-xs font-medium text-slate-500 mb-1">Tools Used:</p>
                     <div className="flex flex-wrap gap-1">
                       {tools.map((tool: string, i: number) => (
-                        <span key={i} className="text-xs bg-blue-900/30 text-blue-300 px-2 py-0.5 rounded border border-blue-800/40">{tool}</span>
+                        <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-100">{tool}</span>
                       ))}
                     </div>
                   </div>
@@ -116,15 +116,15 @@ export function AgentActivityLog({ incidentId, className }: AgentActivityLogProp
                 {activity.result && (
                   <div>
                     <p className="text-xs font-medium text-slate-500 mb-1">Result:</p>
-                    <p className="text-xs text-slate-400 bg-slate-800 rounded p-2 max-h-32 overflow-y-auto">
+                    <p className="text-xs text-slate-600 bg-white rounded-lg border border-slate-100 p-2 max-h-32 overflow-y-auto">
                       {activity.result.length > 500 ? activity.result.substring(0, 500) + '…' : activity.result}
                     </p>
                   </div>
                 )}
                 {activity.errorMsg && (
                   <div>
-                    <p className="text-xs font-medium text-red-500 mb-1">Error:</p>
-                    <p className="text-xs text-red-400 bg-red-900/20 rounded p-2">{activity.errorMsg}</p>
+                    <p className="text-xs font-medium text-red-600 mb-1">Error:</p>
+                    <p className="text-xs text-red-700 bg-red-50 rounded-lg border border-red-100 p-2">{activity.errorMsg}</p>
                   </div>
                 )}
               </div>

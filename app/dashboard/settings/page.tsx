@@ -76,30 +76,30 @@ export default function SettingsPage() {
 
   const StatusIcon = ({ status }: { status: string }) => {
     if (status === 'checking') return <div className="h-5 w-5 rounded-full border-2 border-blue-500 border-t-transparent animate-spin" />
-    if (status === 'ok') return <CheckCircle className="h-5 w-5 text-green-400" />
-    if (status === 'demo') return <CheckCircle className="h-5 w-5 text-amber-400" />
-    return <XCircle className="h-5 w-5 text-red-400" />
+    if (status === 'ok') return <CheckCircle className="h-5 w-5 text-green-500" />
+    if (status === 'demo') return <CheckCircle className="h-5 w-5 text-amber-500" />
+    return <XCircle className="h-5 w-5 text-red-500" />
   }
 
   return (
     <div className="space-y-6 max-w-2xl">
       <div>
-        <h1 className="text-2xl font-bold text-slate-100">Settings</h1>
+        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
         <p className="text-slate-500 text-sm mt-0.5">API integrations and system status</p>
       </div>
 
       {/* Demo mode banner */}
       {demoMode && (
-        <div className="rounded-lg border border-amber-800 bg-amber-900/20 p-4">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4">
           <div className="flex items-start gap-3">
-            <Key className="h-5 w-5 text-amber-400 flex-shrink-0 mt-0.5" />
+            <Key className="h-5 w-5 text-amber-600 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-medium text-amber-300">Demo Mode Active</p>
-              <p className="text-xs text-amber-400/80 mt-1">
-                AI analysis and rescue planning are using mock responses. For real AI-powered features, add your Gemini API key to <code className="bg-amber-950 px-1 rounded">.env.local</code>:
+              <p className="text-sm font-medium text-amber-800">Demo Mode Active</p>
+              <p className="text-xs text-amber-700 mt-1">
+                AI analysis and rescue planning are using mock responses. For real AI-powered features, add your Gemini API key to <code className="bg-amber-100 px-1 rounded">.env.local</code>:
               </p>
-              <pre className="mt-2 text-xs bg-amber-950 rounded p-2 text-amber-300">GEMINI_API_KEY=your_key_here</pre>
-              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-400 hover:underline mt-1 block">
+              <pre className="mt-2 text-xs bg-slate-900 text-slate-100 rounded-xl p-3">GEMINI_API_KEY=your_key_here</pre>
+              <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener noreferrer" className="text-xs text-blue-600 hover:underline mt-1 block">
                 Get a free Gemini API key at aistudio.google.com →
               </a>
             </div>
@@ -108,23 +108,23 @@ export default function SettingsPage() {
       )}
 
       {/* Service status */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800 overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-700">
-          <h2 className="text-sm font-semibold text-slate-300">Service Status</h2>
+      <div className="rounded-2xl border border-black/[0.06] bg-white shadow-sm overflow-hidden">
+        <div className="px-4 py-3 border-b border-slate-100">
+          <h2 className="text-sm font-semibold text-slate-700">Service Status</h2>
         </div>
-        <div className="divide-y divide-slate-700/50">
+        <div className="divide-y divide-slate-100">
           {services.map((service) => (
             <div key={service.name} className="flex items-center gap-4 px-4 py-4">
-              <div className="text-slate-500">{service.icon}</div>
+              <div className="text-slate-400">{service.icon}</div>
               <div className="flex-1">
-                <p className="text-sm font-medium text-slate-200">{service.name}</p>
+                <p className="text-sm font-medium text-slate-800">{service.name}</p>
                 <p className="text-xs text-slate-500">{service.description}</p>
                 {service.detail && (
                   <p className={`text-xs mt-0.5 ${
-                    service.status === 'ok' ? 'text-green-400'
-                    : service.status === 'demo' ? 'text-amber-400'
-                    : service.status === 'error' ? 'text-red-400'
-                    : 'text-slate-500'
+                    service.status === 'ok' ? 'text-green-600'
+                    : service.status === 'demo' ? 'text-amber-600'
+                    : service.status === 'error' ? 'text-red-600'
+                    : 'text-slate-400'
                   }`}>
                     {service.detail}
                   </p>
@@ -137,8 +137,8 @@ export default function SettingsPage() {
       </div>
 
       {/* Stack info */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">Technology Stack</h2>
+      <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-slate-700 mb-3">Technology Stack</h2>
         <div className="grid grid-cols-2 gap-2 text-xs">
           {[
             ['Frontend', 'Next.js 14 App Router + TypeScript'],
@@ -151,16 +151,16 @@ export default function SettingsPage() {
             ['Charts', 'Recharts'],
           ].map(([key, val]) => (
             <div key={key} className="flex gap-2">
-              <span className="text-slate-500 w-24 flex-shrink-0">{key}</span>
-              <span className="text-slate-300">{val}</span>
+              <span className="text-slate-400 w-24 flex-shrink-0">{key}</span>
+              <span className="text-slate-700">{val}</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* Demo credentials */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-        <h2 className="text-sm font-semibold text-slate-300 mb-3">Demo Credentials</h2>
+      <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-semibold text-slate-700 mb-3">Demo Credentials</h2>
         <div className="space-y-2 text-xs">
           {[
             ['Admin', 'admin@resqai.demo', 'ADMIN'],
@@ -169,11 +169,11 @@ export default function SettingsPage() {
             ['Rescue Team', 'team@resqai.demo', 'RESCUE_TEAM'],
             ['Citizen', 'citizen@resqai.demo', 'CITIZEN'],
           ].map(([name, email, role]) => (
-            <div key={email} className="flex items-center gap-3 p-2 bg-slate-900 rounded">
+            <div key={email} className="flex items-center gap-3 p-2 bg-slate-50 rounded-xl border border-slate-100">
               <div className="w-24 text-slate-500">{name}</div>
-              <code className="flex-1 text-blue-400">{email}</code>
-              <span className="text-slate-500">Password: <code className="text-slate-300">demo1234</code></span>
-              <span className="text-xs text-slate-600">{role}</span>
+              <code className="flex-1 text-blue-600">{email}</code>
+              <span className="text-slate-500">Password: <code className="text-slate-700">demo1234</code></span>
+              <span className="text-xs text-slate-400">{role}</span>
             </div>
           ))}
         </div>
@@ -181,4 +181,3 @@ export default function SettingsPage() {
     </div>
   )
 }
-

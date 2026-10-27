@@ -21,23 +21,23 @@ import dynamic from 'next/dynamic'
 
 const IncidentMap = dynamic(
   () => import('@/components/dashboard/IncidentMap').then((m) => m.IncidentMap),
-  { ssr: false, loading: () => <div className="h-48 bg-slate-800 rounded-lg animate-pulse" /> }
+  { ssr: false, loading: () => <div className="h-48 bg-slate-100 rounded-xl animate-pulse" /> }
 )
 
 const SEVERITY_COLORS: Record<string, string> = {
-  CRITICAL: 'text-red-400 bg-red-900/30 border-red-800',
-  HIGH: 'text-orange-400 bg-orange-900/30 border-orange-800',
-  MEDIUM: 'text-yellow-400 bg-yellow-900/30 border-yellow-800',
-  LOW: 'text-green-400 bg-green-900/30 border-green-800',
+  CRITICAL: 'text-red-700 bg-red-50 border-red-200',
+  HIGH: 'text-orange-700 bg-orange-50 border-orange-200',
+  MEDIUM: 'text-yellow-700 bg-yellow-50 border-yellow-200',
+  LOW: 'text-green-700 bg-green-50 border-green-200',
 }
 const STATUS_COLORS: Record<string, string> = {
-  REPORTED: 'text-slate-300 bg-slate-700 border-slate-600',
-  ANALYZING: 'text-blue-400 bg-blue-900/30 border-blue-800',
-  VERIFIED: 'text-purple-400 bg-purple-900/30 border-purple-800',
-  DISPATCHED: 'text-cyan-400 bg-cyan-900/30 border-cyan-800',
-  IN_PROGRESS: 'text-amber-400 bg-amber-900/30 border-amber-800',
-  RESOLVED: 'text-green-400 bg-green-900/30 border-green-800',
-  CLOSED: 'text-slate-500 bg-slate-800 border-slate-700',
+  REPORTED: 'text-slate-600 bg-slate-100 border-slate-200',
+  ANALYZING: 'text-blue-700 bg-blue-50 border-blue-200',
+  VERIFIED: 'text-purple-700 bg-purple-50 border-purple-200',
+  DISPATCHED: 'text-cyan-700 bg-cyan-50 border-cyan-200',
+  IN_PROGRESS: 'text-amber-700 bg-amber-50 border-amber-200',
+  RESOLVED: 'text-green-700 bg-green-50 border-green-200',
+  CLOSED: 'text-slate-500 bg-slate-50 border-slate-200',
 }
 
 function fdt(d: string) {
@@ -152,9 +152,9 @@ export default function IncidentDetailPage() {
   if (loading) {
     return (
       <div className="space-y-4">
-        <div className="h-8 bg-slate-800 rounded animate-pulse w-48" />
-        <div className="h-40 bg-slate-800 rounded-lg animate-pulse" />
-        <div className="h-96 bg-slate-800 rounded-lg animate-pulse" />
+        <div className="h-8 bg-white border border-black/[0.06] rounded-xl animate-pulse w-48" />
+        <div className="h-40 bg-white border border-black/[0.06] rounded-2xl animate-pulse" />
+        <div className="h-96 bg-white border border-black/[0.06] rounded-2xl animate-pulse" />
       </div>
     )
   }
@@ -172,18 +172,18 @@ export default function IncidentDetailPage() {
   return (
     <div className="space-y-5 max-w-5xl">
       <div>
-        <Link href="/dashboard/incidents" className="flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-300 mb-3">
+        <Link href="/dashboard/incidents" className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-700 mb-3 transition-colors">
           <ArrowLeft className="h-4 w-4" /> Back to Incidents
         </Link>
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <div className="flex items-center gap-2 flex-wrap mb-1">
-              <h1 className="text-xl font-bold text-slate-100">{incident.title}</h1>
-              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${SEVERITY_COLORS[incident.severity]}`}>{incident.severity}</span>
-              <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${STATUS_COLORS[incident.status]}`}>{(incident.status || '').replace(/_/g,' ')}</span>
+              <h1 className="text-xl font-bold text-slate-900">{incident.title}</h1>
+              <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${SEVERITY_COLORS[incident.severity]}`}>{incident.severity}</span>
+              <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${STATUS_COLORS[incident.status]}`}>{(incident.status || '').replace(/_/g,' ')}</span>
             </div>
-            <div className="flex items-center gap-3 text-xs text-slate-500 flex-wrap">
-              <code className="bg-slate-800 px-1.5 py-0.5 rounded">{incident.trackingId}</code>
+            <div className="flex items-center gap-3 text-xs text-slate-400 flex-wrap">
+              <code className="bg-slate-100 text-slate-600 px-2 py-0.5 rounded-lg font-mono">{incident.trackingId}</code>
               <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{fdt(incident.createdAt)}</span>
               {incident.address && <span className="flex items-center gap-1"><MapPin className="h-3 w-3" />{incident.address}</span>}
             </div>
@@ -212,26 +212,26 @@ export default function IncidentDetailPage() {
 
             {/* Overview */}
             <TabsContent value="overview" className="space-y-4 mt-4">
-              <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 space-y-3">
-                <h3 className="text-sm font-semibold text-slate-300">Incident Details</h3>
-                <p className="text-sm text-slate-400">{incident.description || 'No description.'}</p>
-                <div className="grid grid-cols-2 gap-3 text-sm">
-                  <div><p className="text-xs text-slate-500">Type</p><p className="text-slate-300 font-medium">{(incident.type || '').replace(/_/g,' ')}</p></div>
-                  <div><p className="text-xs text-slate-500">Reporter</p><p className="text-slate-300 font-medium flex items-center gap-1"><User className="h-3.5 w-3.5 text-slate-500" />{incident.reportedBy?.name || incident.reporterName || 'Anonymous'}</p></div>
-                  <div><p className="text-xs text-slate-500">Contact</p><p className="text-slate-300 font-medium flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-slate-500" />{incident.reporterPhone || '—'}</p></div>
-                  <div><p className="text-xs text-slate-500">Assigned To</p><p className="text-slate-300 font-medium">{incident.assignedTo?.name || 'Unassigned'}</p></div>
+              <div className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm space-y-4">
+                <h3 className="text-sm font-semibold text-slate-700">Incident Details</h3>
+                <p className="text-sm text-slate-600">{incident.description || 'No description.'}</p>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div><p className="text-xs text-slate-400 mb-0.5">Type</p><p className="text-slate-800 font-medium">{(incident.type || '').replace(/_/g,' ')}</p></div>
+                  <div><p className="text-xs text-slate-400 mb-0.5">Reporter</p><p className="text-slate-800 font-medium flex items-center gap-1"><User className="h-3.5 w-3.5 text-slate-400" />{incident.reportedBy?.name || incident.reporterName || 'Anonymous'}</p></div>
+                  <div><p className="text-xs text-slate-400 mb-0.5">Contact</p><p className="text-slate-800 font-medium flex items-center gap-1"><Phone className="h-3.5 w-3.5 text-slate-400" />{incident.reporterPhone || '—'}</p></div>
+                  <div><p className="text-xs text-slate-400 mb-0.5">Assigned To</p><p className="text-slate-800 font-medium">{incident.assignedTo?.name || 'Unassigned'}</p></div>
                 </div>
                 {incident.notes && (
-                  <div className="bg-slate-900 rounded p-3">
-                    <p className="text-xs text-slate-500 mb-1">Officer Notes</p>
-                    <p className="text-sm text-slate-300">{incident.notes}</p>
+                  <div className="bg-slate-50 rounded-xl border border-slate-100 p-3">
+                    <p className="text-xs text-slate-400 mb-1">Officer Notes</p>
+                    <p className="text-sm text-slate-700">{incident.notes}</p>
                   </div>
                 )}
               </div>
 
               {incident.latitude && incident.longitude && (
-                <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-                  <h3 className="text-sm font-semibold text-slate-300 mb-3">Location</h3>
+                <div className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
+                  <h3 className="text-sm font-semibold text-slate-700 mb-3">Location</h3>
                   <IncidentMap
                     incidents={[{ ...incident, incidentType: incident.type }]}
                     center={[incident.latitude, incident.longitude]}
@@ -240,22 +240,22 @@ export default function IncidentDetailPage() {
                 </div>
               )}
 
-              <div className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-                <h3 className="text-sm font-semibold text-slate-300 mb-3">Timeline</h3>
+              <div className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm">
+                <h3 className="text-sm font-semibold text-slate-700 mb-4">Timeline</h3>
                 {timeline.length === 0 ? (
-                  <p className="text-slate-500 text-xs">No timeline entries yet.</p>
+                  <p className="text-slate-400 text-xs">No timeline entries yet.</p>
                 ) : (
                   <div className="space-y-3">
                     {timeline.map((entry: any, i: number) => (
                       <div key={entry.id} className="flex gap-3">
                         <div className="flex flex-col items-center">
-                          <div className="h-2.5 w-2.5 rounded-full bg-blue-500 mt-1" />
-                          {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-700 mt-1" />}
+                          <div className="h-2.5 w-2.5 rounded-full bg-blue-500 ring-2 ring-blue-100 mt-1 flex-shrink-0" />
+                          {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-200 mt-1" />}
                         </div>
                         <div className="pb-3">
-                          <p className="text-sm font-medium text-slate-200">{entry.status.replace(/_/g,' ')}</p>
-                          {entry.note && <p className="text-xs text-slate-400 mt-0.5">{entry.note}</p>}
-                          <p className="text-xs text-slate-600 mt-1">{fdt(entry.createdAt)}</p>
+                          <p className="text-sm font-medium text-slate-800">{entry.status.replace(/_/g,' ')}</p>
+                          {entry.note && <p className="text-xs text-slate-500 mt-0.5">{entry.note}</p>}
+                          <p className="text-xs text-slate-400 mt-1">{fdt(entry.createdAt)}</p>
                         </div>
                       </div>
                     ))}
@@ -267,10 +267,10 @@ export default function IncidentDetailPage() {
             {/* AI Analysis */}
             <TabsContent value="analysis" className="space-y-4 mt-4">
               {analyses.length === 0 ? (
-                <div className="rounded-lg border border-slate-700 bg-slate-800 p-8 text-center">
-                  <Bot className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400 font-medium mb-1">No analysis yet</p>
-                  <p className="text-slate-600 text-sm mb-4">Run AI analysis to get incident insights and priority assessment.</p>
+                <div className="rounded-2xl border border-black/[0.06] bg-white p-8 text-center shadow-sm">
+                  <Bot className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-600 font-medium mb-1">No analysis yet</p>
+                  <p className="text-slate-400 text-sm mb-4">Run AI analysis to get incident insights and priority assessment.</p>
                   <Button onClick={runAnalysis} disabled={analyzing}>
                     <Bot className="h-4 w-4 mr-2" />{analyzing ? 'Analyzing…' : 'Run AI Analysis'}
                   </Button>
@@ -280,42 +280,43 @@ export default function IncidentDetailPage() {
                   const facts = analysis.keyFacts ? (() => { try { return JSON.parse(analysis.keyFacts) } catch { return [] } })() : []
                   const missing = analysis.missingInfo ? (() => { try { return JSON.parse(analysis.missingInfo) } catch { return [] } })() : []
                   return (
-                    <div key={analysis.id} className="rounded-lg border border-slate-700 bg-slate-800 p-4 space-y-3">
+                    <div key={analysis.id} className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm font-semibold text-slate-300">Analysis #{analyses.length - i} — {analysis.agentName}</span>
-                        <span className="text-xs text-slate-500">{fdt(analysis.createdAt)}</span>
+                        <span className="text-sm font-semibold text-slate-700">Analysis #{analyses.length - i} — {analysis.agentName}</span>
+                        <span className="text-xs text-slate-400">{fdt(analysis.createdAt)}</span>
                       </div>
                       {analysis.isMock && (
-                        <div className="bg-amber-900/20 border border-amber-800/40 rounded px-3 py-1.5 text-xs text-amber-400">
-                          ⚠ Demo Mode — Configure GEMINI_API_KEY for real AI analysis
+                        <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-800 flex items-center gap-2">
+                          <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" />
+                          Demo Mode — Configure GEMINI_API_KEY for real AI analysis
                         </div>
                       )}
                       {analysis.summary && (
-                        <div><p className="text-xs text-slate-500 mb-1">Summary</p><p className="text-sm text-slate-300">{analysis.summary}</p></div>
+                        <div><p className="text-xs text-slate-400 mb-1">Summary</p><p className="text-sm text-slate-700">{analysis.summary}</p></div>
                       )}
-                      <div className="grid grid-cols-2 gap-3">
-                        <div><p className="text-xs text-slate-500 mb-1">Classification</p><p className="text-sm font-medium text-slate-200">{analysis.classification || '—'}</p></div>
-                        <div><p className="text-xs text-slate-500 mb-1">Severity Assessment</p><p className="text-sm font-medium text-slate-200">{analysis.severity || '—'}</p></div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div><p className="text-xs text-slate-400 mb-1">Classification</p><p className="text-sm font-medium text-slate-800">{analysis.classification || '—'}</p></div>
+                        <div><p className="text-xs text-slate-400 mb-1">Severity Assessment</p><p className="text-sm font-medium text-slate-800">{analysis.severity || '—'}</p></div>
                       </div>
                       {analysis.priorityReason && (
-                        <div><p className="text-xs text-slate-500 mb-1">Priority Reasoning</p><p className="text-xs text-slate-400 bg-slate-900 rounded p-2">{analysis.priorityReason}</p></div>
+                        <div><p className="text-xs text-slate-400 mb-1">Priority Reasoning</p><p className="text-xs text-slate-600 bg-slate-50 rounded-xl border border-slate-100 p-3">{analysis.priorityReason}</p></div>
                       )}
                       {facts.length > 0 && (
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Key Facts</p>
+                          <p className="text-xs text-slate-400 mb-2">Key Facts</p>
                           <ul className="space-y-1">
                             {facts.map((f: string, i: number) => (
-                              <li key={i} className="text-xs text-slate-400 flex items-start gap-1.5"><CheckCircle className="h-3 w-3 text-green-400 mt-0.5 flex-shrink-0" />{f}</li>
+                              <li key={i} className="text-xs text-slate-600 flex items-start gap-1.5"><CheckCircle className="h-3 w-3 text-green-500 mt-0.5 flex-shrink-0" />{f}</li>
                             ))}
                           </ul>
                         </div>
                       )}
                       {missing.length > 0 && (
                         <div>
-                          <p className="text-xs text-slate-500 mb-1">Missing Information</p>
+                          <p className="text-xs text-slate-400 mb-2">Missing Information</p>
                           <ul className="space-y-1">
                             {missing.map((m: string, i: number) => (
-                              <li key={i} className="text-xs text-slate-400 flex items-start gap-1.5"><AlertTriangle className="h-3 w-3 text-amber-400 mt-0.5 flex-shrink-0" />{m}</li>
+                              <li key={i} className="text-xs text-slate-600 flex items-start gap-1.5"><AlertTriangle className="h-3 w-3 text-amber-500 mt-0.5 flex-shrink-0" />{m}</li>
                             ))}
                           </ul>
                         </div>
@@ -329,54 +330,55 @@ export default function IncidentDetailPage() {
             {/* Rescue Plan */}
             <TabsContent value="plan" className="space-y-4 mt-4">
               {!rescuePlan ? (
-                <div className="rounded-lg border border-slate-700 bg-slate-800 p-8 text-center">
-                  <Map className="h-10 w-10 text-slate-600 mx-auto mb-3" />
-                  <p className="text-slate-400 font-medium mb-1">No rescue plan yet</p>
-                  <p className="text-slate-600 text-sm mb-4">Generate an AI-powered rescue plan.</p>
+                <div className="rounded-2xl border border-black/[0.06] bg-white p-8 text-center shadow-sm">
+                  <Map className="h-10 w-10 text-slate-300 mx-auto mb-3" />
+                  <p className="text-slate-600 font-medium mb-1">No rescue plan yet</p>
+                  <p className="text-slate-400 text-sm mb-4">Generate an AI-powered rescue plan.</p>
                   <Button onClick={generatePlan} disabled={planGenerating}>
                     {planGenerating ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Bot className="h-4 w-4 mr-2" />}
                     {planGenerating ? 'Generating…' : 'Generate Rescue Plan'}
                   </Button>
                 </div>
               ) : (
-                <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 space-y-3">
+                <div className="rounded-2xl border border-black/[0.06] bg-white p-5 shadow-sm space-y-4">
                   <div className="flex items-center justify-between flex-wrap gap-2">
-                    <h3 className="text-sm font-semibold text-slate-300">Rescue Plan</h3>
+                    <h3 className="text-sm font-semibold text-slate-700">Rescue Plan</h3>
                     <div className="flex items-center gap-2">
-                      <span className={`text-xs px-2 py-0.5 rounded-full border font-medium ${rescuePlan.status === 'APPROVED' ? 'text-green-400 bg-green-900/30 border-green-800' : 'text-amber-400 bg-amber-900/30 border-amber-800'}`}>
+                      <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${rescuePlan.status === 'APPROVED' ? 'text-green-700 bg-green-50 border-green-200' : 'text-amber-700 bg-amber-50 border-amber-200'}`}>
                         {rescuePlan.status}
                       </span>
-                      <span className="text-xs text-slate-500">{fdt(rescuePlan.createdAt)}</span>
+                      <span className="text-xs text-slate-400">{fdt(rescuePlan.createdAt)}</span>
                     </div>
                   </div>
                   {rescuePlan.isMock && (
-                    <div className="bg-amber-900/20 border border-amber-800/40 rounded px-3 py-1.5 text-xs text-amber-400">
-                      ⚠ Demo Mode — Configure GEMINI_API_KEY for real AI planning
+                    <div className="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-800 flex items-center gap-2">
+                      <AlertTriangle className="h-3.5 w-3.5 text-amber-600 flex-shrink-0" />
+                      Demo Mode — Configure GEMINI_API_KEY for real AI planning
                     </div>
                   )}
                   {rescuePlan.summary && (
-                    <div><p className="text-xs text-slate-500 mb-1">Summary</p><p className="text-sm text-slate-300">{rescuePlan.summary}</p></div>
+                    <div><p className="text-xs text-slate-400 mb-1">Summary</p><p className="text-sm text-slate-700">{rescuePlan.summary}</p></div>
                   )}
                   {rescuePlan.estimatedTime && (
-                    <div><p className="text-xs text-slate-500 mb-1">Estimated Time</p><p className="text-sm text-slate-300">{rescuePlan.estimatedTime} minutes</p></div>
+                    <div><p className="text-xs text-slate-400 mb-1">Estimated Time</p><p className="text-sm text-slate-800">{rescuePlan.estimatedTime} minutes</p></div>
                   )}
                   {rescuePlan.routeInfo && (
-                    <div><p className="text-xs text-slate-500 mb-1">Route Information</p><p className="text-xs text-slate-400 bg-slate-900 rounded p-2">{rescuePlan.routeInfo}</p></div>
+                    <div><p className="text-xs text-slate-400 mb-1">Route Information</p><p className="text-xs text-slate-600 bg-slate-50 rounded-xl border border-slate-100 p-3">{rescuePlan.routeInfo}</p></div>
                   )}
                   {rescuePlan.weatherInfo && (
-                    <div><p className="text-xs text-slate-500 mb-1">Weather Conditions</p><p className="text-xs text-slate-400 bg-slate-900 rounded p-2">{rescuePlan.weatherInfo}</p></div>
+                    <div><p className="text-xs text-slate-400 mb-1">Weather Conditions</p><p className="text-xs text-slate-600 bg-slate-50 rounded-xl border border-slate-100 p-3">{rescuePlan.weatherInfo}</p></div>
                   )}
                   {resRequired.length > 0 && (
                     <div>
-                      <p className="text-xs text-slate-500 mb-1">Resources Required</p>
+                      <p className="text-xs text-slate-400 mb-2">Resources Required</p>
                       <div className="flex flex-wrap gap-1.5">
                         {resRequired.map((r: string, i: number) => (
-                          <span key={i} className="text-xs bg-blue-900/30 text-blue-300 px-2 py-0.5 rounded border border-blue-800/40">{r}</span>
+                          <span key={i} className="text-xs bg-blue-50 text-blue-700 px-2.5 py-0.5 rounded-full border border-blue-100">{r}</span>
                         ))}
                       </div>
                     </div>
                   )}
-                  <div className="flex gap-2 pt-2">
+                  <div className="flex gap-2 pt-1">
                     <Button onClick={generatePlan} disabled={planGenerating} variant="outline" size="sm">
                       {planGenerating ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <RefreshCw className="h-4 w-4 mr-1.5" />}
                       Regenerate
@@ -389,22 +391,22 @@ export default function IncidentDetailPage() {
             {/* Resources */}
             <TabsContent value="resources" className="space-y-4 mt-4">
               {reservations.length === 0 ? (
-                <div className="rounded-lg border border-slate-700 bg-slate-800 p-6 text-center">
-                  <Package className="h-8 w-8 text-slate-600 mx-auto mb-2" />
+                <div className="rounded-2xl border border-black/[0.06] bg-white p-6 text-center shadow-sm">
+                  <Package className="h-8 w-8 text-slate-300 mx-auto mb-2" />
                   <p className="text-slate-500 text-sm">No resource reservations yet.</p>
-                  <p className="text-xs text-slate-600 mt-1">Generate a rescue plan to auto-assign resources.</p>
+                  <p className="text-xs text-slate-400 mt-1">Generate a rescue plan to auto-assign resources.</p>
                 </div>
               ) : (
                 <div className="space-y-3">
                   {reservations.map((res: any) => (
-                    <div key={res.id} className="rounded-lg border border-slate-700 bg-slate-800 p-4">
-                      <div className="flex items-center justify-between mb-2">
+                    <div key={res.id} className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm">
+                      <div className="flex items-center justify-between mb-3">
                         <div>
-                          <p className="text-sm font-medium text-slate-200">Reservation #{res.id.slice(0, 8)}</p>
-                          <p className="text-xs text-slate-500">Status: {res.status}</p>
+                          <p className="text-sm font-medium text-slate-800">Reservation #{res.id.slice(0, 8)}</p>
+                          <p className="text-xs text-slate-400">Status: {res.status}</p>
                         </div>
-                        <div className="flex gap-2">
-                          <span className={`text-xs px-2 py-0.5 rounded-full border ${res.status === 'APPROVED' ? 'text-green-400 bg-green-900/30 border-green-800' : 'text-amber-400 bg-amber-900/30 border-amber-800'}`}>
+                        <div className="flex gap-2 items-center">
+                          <span className={`text-xs px-2.5 py-0.5 rounded-full border font-medium ${res.status === 'APPROVED' ? 'text-green-700 bg-green-50 border-green-200' : 'text-amber-700 bg-amber-50 border-amber-200'}`}>
                             {res.status}
                           </span>
                           {res.status === 'PENDING' && (
@@ -413,13 +415,13 @@ export default function IncidentDetailPage() {
                         </div>
                       </div>
                       {res.items && res.items.length > 0 && (
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           {res.items.map((item: any) => (
-                            <div key={item.id} className="flex items-center gap-3 text-xs text-slate-400">
-                              <Package className="h-3.5 w-3.5 text-slate-500" />
+                            <div key={item.id} className="flex items-center gap-3 text-xs text-slate-500">
+                              <Package className="h-3.5 w-3.5 text-slate-400" />
                               <span>{item.item?.name || 'Unknown Item'}</span>
-                              <span>× {item.quantity}</span>
-                              {item.reason && <span className="text-slate-600">({item.reason})</span>}
+                              <span className="font-medium">× {item.quantity}</span>
+                              {item.reason && <span className="text-slate-400">({item.reason})</span>}
                             </div>
                           ))}
                         </div>
@@ -439,8 +441,8 @@ export default function IncidentDetailPage() {
 
         {/* Right panel */}
         <div className="space-y-4">
-          <div className="rounded-lg border border-slate-700 bg-slate-800 p-4 space-y-3">
-            <h3 className="text-sm font-semibold text-slate-300">Update Status</h3>
+          <div className="rounded-2xl border border-black/[0.06] bg-white p-4 shadow-sm space-y-3">
+            <h3 className="text-sm font-semibold text-slate-700">Update Status</h3>
             <Select value={newStatus} onValueChange={setNewStatus}>
               <SelectTrigger><SelectValue placeholder="Select new status…" /></SelectTrigger>
               <SelectContent>
@@ -450,7 +452,7 @@ export default function IncidentDetailPage() {
               </SelectContent>
             </Select>
             <textarea
-              className="w-full text-sm bg-slate-900 border border-slate-700 rounded p-2 text-slate-300 placeholder:text-slate-600 focus:outline-none focus:ring-1 focus:ring-blue-500 resize-none"
+              className="w-full text-sm bg-white border border-slate-200 rounded-xl p-3 text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
               rows={2}
               placeholder="Add officer notes (optional)…"
               value={statusNote}
@@ -470,4 +472,3 @@ export default function IncidentDetailPage() {
     </div>
   )
 }
-

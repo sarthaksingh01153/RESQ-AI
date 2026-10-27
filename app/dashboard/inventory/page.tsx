@@ -171,9 +171,9 @@ export default function InventoryPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-100">Inventory Management</h1>
-          <p className="text-slate-500 text-sm mt-0.5">
-            {items.length} items · {lowStockCount > 0 && <span className="text-amber-400">{lowStockCount} low stock</span>}
+          <h1 className="text-2xl font-bold text-slate-900">Inventory Management</h1>
+          <p className="text-slate-400 text-sm mt-0.5">
+            {items.length} items · {lowStockCount > 0 && <span className="text-amber-600">{lowStockCount} low stock</span>}
           </p>
         </div>
         <div className="flex gap-2">
@@ -190,12 +190,12 @@ export default function InventoryPage() {
 
       {/* Low stock alert banner */}
       {lowStockCount > 0 && (
-        <div className="rounded-lg border border-amber-800 bg-amber-900/20 p-3 flex items-center gap-3">
-          <AlertTriangle className="h-5 w-5 text-amber-400 flex-shrink-0" />
-          <p className="text-sm text-amber-300">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
+          <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+          <p className="text-sm text-amber-800">
             <span className="font-semibold">{lowStockCount} item{lowStockCount > 1 ? 's' : ''}</span> below minimum threshold. Review and restock soon.
           </p>
-          <button onClick={() => setLowStockOnly(true)} className="ml-auto text-xs text-amber-400 hover:underline">
+          <button onClick={() => setLowStockOnly(true)} className="ml-auto text-xs text-amber-700 hover:underline font-medium">
             View low stock →
           </button>
         </div>
@@ -204,7 +204,7 @@ export default function InventoryPage() {
       {/* Filters */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
           <Input placeholder="Search items…" value={search} onChange={(e) => setSearch(e.target.value)} className="pl-9" />
         </div>
         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -223,8 +223,8 @@ export default function InventoryPage() {
         </Select>
         <button
           onClick={() => setLowStockOnly((v) => !v)}
-          className={`flex items-center gap-2 px-3 py-2 rounded-md border text-sm font-medium transition-colors ${
-            lowStockOnly ? 'bg-amber-900/30 border-amber-700 text-amber-400' : 'bg-slate-800 border-slate-700 text-slate-400 hover:text-slate-300'
+          className={`flex items-center gap-2 px-3 py-2 rounded-xl border text-sm font-medium transition-colors ${
+            lowStockOnly ? 'bg-amber-50 border-amber-200 text-amber-700' : 'bg-white border-slate-200 text-slate-500 hover:text-slate-700'
           }`}
         >
           <TrendingDown className="h-4 w-4" />
@@ -233,55 +233,55 @@ export default function InventoryPage() {
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-slate-700 bg-slate-800 overflow-hidden">
+      <div className="rounded-2xl bg-white border border-black/[0.06] shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-700">
+              <tr className="bg-slate-50 border-b border-slate-100">
                 {['Name','Category','Location','Available','Reserved','Dispatched','Condition','Actions'].map((h) => (
                   <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-slate-400 uppercase tracking-wide whitespace-nowrap">{h}</th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-700/40">
+            <tbody className="divide-y divide-slate-100">
               {loading ? (
                 Array.from({ length: 6 }).map((_, i) => (
-                  <tr key={i}>{Array.from({ length: 8 }).map((_, j) => (<td key={j} className="px-4 py-3"><div className="h-4 bg-slate-700 rounded animate-pulse" /></td>))}</tr>
+                  <tr key={i}>{Array.from({ length: 8 }).map((_, j) => (<td key={j} className="px-4 py-3"><div className="h-4 bg-slate-100 rounded animate-pulse" /></td>))}</tr>
                 ))
               ) : items.length === 0 ? (
                 <tr>
                   <td colSpan={8} className="px-4 py-12 text-center">
-                    <Package className="h-8 w-8 text-slate-600 mx-auto mb-2" />
-                    <p className="text-slate-500">No inventory items found</p>
+                    <Package className="h-8 w-8 text-slate-300 mx-auto mb-2" />
+                    <p className="text-slate-400">No inventory items found</p>
                   </td>
                 </tr>
               ) : (
                 items.map((item) => (
                   <React.Fragment key={item.id}>
-                    <tr className={`transition-colors ${item.isLowStock ? 'bg-amber-950/20' : 'hover:bg-slate-750'}`}>
+                    <tr className={`transition-colors ${item.isLowStock ? 'bg-amber-50/60' : 'hover:bg-slate-50'}`}>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-2">
-                          {item.isLowStock && <AlertTriangle className="h-3.5 w-3.5 text-amber-400 flex-shrink-0" aria-label="Low stock" />}
+                          {item.isLowStock && <AlertTriangle className="h-3.5 w-3.5 text-amber-500 flex-shrink-0" aria-label="Low stock" />}
                           <div>
-                            <p className="font-medium text-slate-200">{item.name}</p>
-                            <p className="text-xs text-slate-500">{item.unit}</p>
+                            <p className="font-medium text-slate-800">{item.name}</p>
+                            <p className="text-xs text-slate-400">{item.unit}</p>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 py-3 text-xs text-slate-400">
+                      <td className="px-4 py-3 text-xs text-slate-500">
                         {ITEM_CATEGORIES.find((c) => c.value === item.category)?.label || item.category}
                       </td>
-                      <td className="px-4 py-3 text-xs text-slate-400">{item.location?.name || '—'}</td>
+                      <td className="px-4 py-3 text-xs text-slate-500">{item.location?.name || '—'}</td>
                       <td className="px-4 py-3">
-                        <span className={`font-semibold ${item.isLowStock ? 'text-amber-400' : 'text-green-400'}`}>
+                        <span className={`font-semibold ${item.isLowStock ? 'text-amber-600' : 'text-green-600'}`}>
                           {item.availableQty}
                         </span>
-                        <span className="text-xs text-slate-600 ml-1">/ min {item.minThreshold}</span>
+                        <span className="text-xs text-slate-400 ml-1">/ min {item.minThreshold}</span>
                       </td>
-                      <td className="px-4 py-3 text-slate-400">{item.reservedQty}</td>
-                      <td className="px-4 py-3 text-slate-400">{item.dispatchedQty}</td>
+                      <td className="px-4 py-3 text-slate-500">{item.reservedQty}</td>
+                      <td className="px-4 py-3 text-slate-500">{item.dispatchedQty}</td>
                       <td className="px-4 py-3">
-                        <span className={`text-xs font-medium ${CONDITION_COLORS[item.condition] || 'text-slate-400'}`}>
+                        <span className={`text-xs font-medium ${CONDITION_COLORS[item.condition] || 'text-slate-500'}`}>
                           {item.condition}
                         </span>
                       </td>
@@ -290,7 +290,7 @@ export default function InventoryPage() {
                           <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => openEdit(item)} title="Edit">
                             <Edit2 className="h-3.5 w-3.5" />
                           </Button>
-                          <Button variant="ghost" size="sm" className="h-7 px-2 text-amber-400 hover:text-amber-300" onClick={() => setAdjustItem(item)} title="Adjust Stock">
+                          <Button variant="ghost" size="sm" className="h-7 px-2 text-amber-500 hover:text-amber-700" onClick={() => setAdjustItem(item)} title="Adjust Stock">
                             <ArrowUpDown className="h-3.5 w-3.5" />
                           </Button>
                           <Button variant="ghost" size="sm" className="h-7 px-2" onClick={() => toggleHistory(item)} title="Movement History">
@@ -301,28 +301,28 @@ export default function InventoryPage() {
                     </tr>
                     {expandedId === item.id && (
                       <tr>
-                        <td colSpan={8} className="bg-slate-900 px-4 py-3 border-b border-slate-700">
-                          <p className="text-xs font-semibold text-slate-400 mb-2">Movement History</p>
+                        <td colSpan={8} className="bg-slate-50 px-4 py-3 border-b border-slate-100">
+                          <p className="text-xs font-semibold text-slate-500 mb-2">Movement History</p>
                           {movLoading ? (
-                            <div className="h-8 bg-slate-800 rounded animate-pulse" />
+                            <div className="h-8 bg-slate-100 rounded-xl animate-pulse" />
                           ) : movements.length === 0 ? (
-                            <p className="text-xs text-slate-600">No movement history.</p>
+                            <p className="text-xs text-slate-400">No movement history.</p>
                           ) : (
                             <div className="space-y-1 max-h-48 overflow-y-auto">
                               {movements.map((m: any) => (
-                                <div key={m.id} className="flex items-center gap-3 text-xs text-slate-400">
+                                <div key={m.id} className="flex items-center gap-3 text-xs text-slate-500">
                                   <span className={`font-medium w-24 flex-shrink-0 ${
-                                    m.type === 'STOCK_IN' ? 'text-green-400'
-                                    : m.type === 'DISPATCH' ? 'text-cyan-400'
-                                    : m.type === 'RESERVE' ? 'text-blue-400'
-                                    : 'text-red-400'
+                                    m.type === 'STOCK_IN' ? 'text-green-600'
+                                    : m.type === 'DISPATCH' ? 'text-cyan-600'
+                                    : m.type === 'RESERVE' ? 'text-blue-600'
+                                    : 'text-red-600'
                                   }`}>{m.type}</span>
-                                  <span className={m.quantity > 0 ? 'text-green-400' : 'text-red-400'}>
+                                  <span className={m.quantity > 0 ? 'text-green-600' : 'text-red-600'}>
                                     {m.quantity > 0 ? '+' : ''}{m.quantity}
                                   </span>
-                                  {m.reason && <span className="text-slate-500">{m.reason}</span>}
-                                  {m.performedBy && <span className="text-slate-600">by {m.performedBy.name}</span>}
-                                  <span className="text-slate-700 ml-auto">{new Date(m.createdAt).toLocaleString()}</span>
+                                  {m.reason && <span className="text-slate-400">{m.reason}</span>}
+                                  {m.performedBy && <span className="text-slate-400">by {m.performedBy.name}</span>}
+                                  <span className="text-slate-400 ml-auto">{new Date(m.createdAt).toLocaleString()}</span>
                                 </div>
                               ))}
                             </div>
@@ -431,9 +431,9 @@ export default function InventoryPage() {
               <Input className="mt-1" value={adjustReason} onChange={(e) => setAdjustReason(e.target.value)} placeholder="Reason for adjustment…" />
             </div>
             {adjustItem && (
-              <div className="bg-slate-900 rounded p-3 text-xs text-slate-400 space-y-1">
-                <p>Current available: <span className="text-slate-200 font-medium">{adjustItem.availableQty} {adjustItem.unit}</span></p>
-                <p>Min threshold: <span className="text-slate-200 font-medium">{adjustItem.minThreshold} {adjustItem.unit}</span></p>
+              <div className="bg-slate-50 rounded-xl border border-slate-100 p-3 text-xs text-slate-500 space-y-1">
+                <p>Current available: <span className="text-slate-800 font-medium">{adjustItem.availableQty} {adjustItem.unit}</span></p>
+                <p>Min threshold: <span className="text-slate-800 font-medium">{adjustItem.minThreshold} {adjustItem.unit}</span></p>
               </div>
             )}
           </div>
